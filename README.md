@@ -187,17 +187,11 @@ cp -R weekly-report ~/.workbuddy/skills/      # WorkBuddy
 
 ## 截图 / 演示
 
-<!-- screenshots to be added -->
+**首次运行 · 来源盘点**（在 WorkBuddy 中）——Skill 用一条消息问清你的六类工作信息分别在哪，只列当前真正能连上的来源；报了表外平台（如 TAPD / 禅道 / 微信）会如实说「暂时连不上」，不虚构。
 
-> 运行截图稍后补充。占位目录：[`docs/screenshots/`](docs/screenshots/)。
-> 计划补入的画面：首次盘点六源、一次授权确认、候选清单复核、生成的本地周报。
+![首次盘点六源](docs/screenshots/01-init-inventory.png)
 
-<!--
-补图时把下面这段取消注释并替换文件名：
-| 首次盘点 | 授权确认 | 候选复核 | 周报产出 |
-|---|---|---|---|
-| ![](docs/screenshots/01-init-inventory.png) | ![](docs/screenshots/02-auth-confirm.png) | ![](docs/screenshots/03-candidates-review.png) | ![](docs/screenshots/04-report-output.png) |
--->
+> 更多画面陆续补充：一次授权确认、候选清单复核、生成的本地周报。<!-- 02-auth-confirm / 03-candidates-review / 04-report-output -->
 
 ---
 
