@@ -22,19 +22,8 @@
 
 ---
 
-## 演示
-
-**首次运行 · 来源盘点**（在 WorkBuddy 中）——Skill 用一条消息问清你的六类工作信息分别在哪，只列当前真正能连上的来源；报了表外平台（如 TAPD / 禅道 / 微信）会如实说「暂时连不上」，不虚构。
-
-![首次盘点六源](docs/screenshots/01-init-inventory.png)
-
-> 更多画面陆续补充：一次授权确认、候选清单复核、生成的本地周报。<!-- 02-auth-confirm / 03-candidates-review / 04-report-output -->
-
----
-
 ## 目录
 
-- [演示](#演示)
 - [为什么不一样：接触 ≠ 参与](#为什么不一样接触--参与)
 - [支持的来源](#支持的来源)
 - [安装](#安装)
@@ -125,6 +114,10 @@
 </table>
 
 <sub>品牌图标仅用于标识各集成的官方来源（nominative use），版权归各自所有者。在 <b>WorkBuddy</b> 里运行时，采集直接走其自带连接器面板，无需另装上面的 CLI。</sub>
+
+首次运行时，Skill 会用一条消息盘点这些来源（在 WorkBuddy 中演示）：
+
+![首次盘点六源](docs/screenshots/01-init-inventory.png)
 
 ---
 
