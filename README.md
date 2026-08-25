@@ -14,7 +14,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 ![Platform: macOS](https://img.shields.io/badge/platform-macOS-black?logo=apple&logoColor=white)
-![Agents: Codex · WorkBuddy](https://img.shields.io/badge/agents-Codex%20%C2%B7%20WorkBuddy-6E56CF)
+![Agents](https://img.shields.io/badge/agents-Codex%20%C2%B7%20Cursor%20%C2%B7%20WorkBuddy%20%C2%B7%20%E2%80%A6-6E56CF)
 ![Data: local-first](https://img.shields.io/badge/data-local--first-0aa)
 ![Output: draft only](https://img.shields.io/badge/output-draft%20only%20·%20never%20auto--send-orange)
 
@@ -115,15 +115,15 @@
 
 <sub>品牌图标仅用于标识各集成的官方来源（nominative use），版权归各自所有者。在 <b>WorkBuddy</b> 里运行时，采集直接走其自带连接器面板，无需另装上面的 CLI。</sub>
 
-首次运行时，Skill 会用一条消息盘点这些来源（在 WorkBuddy 中演示）：
+首次运行时，Skill 会用一条消息盘点这些来源（下图**以 WorkBuddy 为例**）：
 
-![首次盘点六源](docs/screenshots/01-init-inventory.png)
+![首次盘点六源（WorkBuddy 示例）](docs/screenshots/01-init-inventory.png)
 
 ---
 
 ## 安装
 
-这是一个可分发的 **Agent Skill**——把 `weekly-report/` 目录放进你的 Agent 的 skills 目录即可（Codex / WorkBuddy / 项目级 Claude 都行）。
+这是一个可分发的 **Agent Skill**——把 `weekly-report/` 目录放进你的 Agent 的 skills 目录即可。**任何支持 Skill 与本地命令 / 连接器调用的 Agent 都能用**（如 Codex / Cursor / WorkBuddy / Qoder / 项目级 Claude 等）。
 
 ### 一键安装
 
@@ -178,7 +178,7 @@ cp -R weekly-report ~/.workbuddy/skills/      # WorkBuddy
 
 ## 边界与隐私
 
-- **平台**：macOS，且当前 Agent 需支持 Skills 与本地命令 / 连接器调用（已在 **Codex、WorkBuddy** 验证）。非 macOS / 不支持时只给兼容性提示，不做初始化承诺。
+- **平台**：macOS，且当前 Agent 需支持 Skills 与本地命令 / 连接器调用——**任何满足的 Agent 都能用**（如 Codex、Cursor、WorkBuddy、Qoder；目前已在 Codex / WorkBuddy 实测）。非 macOS / 不支持时只给兼容性提示，不做初始化承诺。
 - **只整理你本人**：不做团队监控，不替你归因他人的工作。
 - **只读**：不发信 / 不删信 / 不改日历提醒 / 不发送提交发布任何东西。
 - **数据留本地**：原始消息 / 邮件 / 逐字稿只放本机临时目录，成稿后清理；文档类连接器（如 kdocs-cli）直连官方 API 取你自己的数据，Skill 不缓存、不外传。
