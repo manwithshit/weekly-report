@@ -105,15 +105,21 @@
       <td>✅ 正式</td>
     </tr>
     <tr>
+      <td><img src="https://cdn.simpleicons.org/google" width="18" align="center" alt="Google"/>&nbsp; <b>谷歌 / Google Workspace</b></td>
+      <td>Gmail · 日历 · Drive/Docs（本人发出 / 参加 / 编辑）</td>
+      <td><code>gws</code>（大陆网络需实测）</td>
+      <td>✅ 正式</td>
+    </tr>
+    <tr>
       <td><img src="assets/icons/wecom.svg" width="20" align="center" alt="企业微信"/>&nbsp; <b>企业微信 / WeCom</b></td>
-      <td>通讯录 / 日历 / 审批等服务端能力；读聊天需企业「会话内容存档」</td>
-      <td><code>wecom-cli</code></td>
-      <td>🧪 实验（个人拿不到聊天历史）</td>
+      <td>IM 无法直读，经原生 AI「大圆」按「接触≠参与」规则总结后带入；文档/日历等服务端能力另计</td>
+      <td>「大圆」总结（前置过滤）</td>
+      <td>🧪 实验</td>
     </tr>
   </tbody>
 </table>
 
-<sub>品牌图标仅用于标识各集成的官方来源（nominative use），版权归各自所有者。在 <b>WorkBuddy</b> 里运行时，采集直接走其自带连接器面板，无需另装上面的 CLI。</sub>
+<sub>品牌图标仅用于标识各集成的官方来源（nominative use），版权归各自所有者。在 <b>WorkBuddy</b> 里运行时，国内源可走其自带连接器面板、无需另装 CLI；<b>谷歌无 WorkBuddy 连接器，仍需本地 gws</b>。</sub>
 
 首次运行时，Skill 会用一条消息盘点这些来源（下图**以 WorkBuddy 为例**）：
 
