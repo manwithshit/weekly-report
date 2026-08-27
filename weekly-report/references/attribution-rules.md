@@ -28,11 +28,11 @@
 - `collection_complete` 是整次来源采集的状态，只放在 `collection_runs`，并同时记录 `stop_reason`；不复制到每条证据。
 
 ## 候选确认门禁
-每个候选使用不随展示顺序或文案润色变化的 `candidate_id`。用户复核后形成 `approved_candidate_ids` 白名单。
+每个候选使用不随展示顺序或文案润色变化的 `candidate_id`，并保留能解析到原证据的非空 `source_evidence_ids`。用户补充的文字先归一为新的用户证据并生成 `evidence_id`，不允许无证据引用的候选进白名单。用户复核后形成 `approved_candidate_ids` 白名单。
 
 - “确认”只批准候选区，不批准已排除、可能遗漏、`pending` 或数据缺口。
-- 用户补充新事项时先生成新 `candidate_id`；修改时保留原 `candidate_id`。二者都必须进入 `approved_candidate_ids`，不得以自由文字直接进入终稿。
-- 单列的总结证据被用户确认后：若只补强既有候选，合并来源并保留原 `candidate_id`；若形成新事项，生成新 `candidate_id`；对应 ID 仍必须进入 `approved_candidate_ids`。
+- 用户补充新事项时先生成新 `evidence_id` 和 `candidate_id`；修改时保留原 `candidate_id` 与原 `source_evidence_ids`，有新证据再追加。二者都必须进入 `approved_candidate_ids`，不得以自由文字直接进入终稿。
+- 单列的总结证据先显示原 `evidence_id`。被用户确认后：若只补强既有候选，合并来源、保留原 `candidate_id` 并追加该 `evidence_id` 到 `source_evidence_ids`；若形成新事项，生成新 `candidate_id` 并写入该 `evidence_id`；对应 ID 仍必须进入 `approved_candidate_ids`。
 - 本周进展 / 风险 / 待解决 / 下周计划这四类成稿内容的每条事实，只能来自 `approved_candidate_ids` 白名单候选。
 - 已排除、可能遗漏、`pending` 只可放在数据说明 / 待确认提示，不得自动转成风险或计划。
 - 风格校准只改写法，不得新增事实或把旧周报内容带入本周。

@@ -7,7 +7,7 @@
 | 文件 | 说明 |
 |---|---|
 | [`sample-evidence.json`](sample-evidence.json) | 一周的「个人证据」数据（Skill 采集 + 归一化后的中间产物）。共 13 条：7 条**本人主动产出**、5 条**只是接触过**的反例、1 条需单独确认的**企微总结证据**。采集完整性在 `collection_runs` 中单独记录。 |
-| [`sample-candidates.md`](sample-candidates.md) | Skill 成稿前给你复核的**候选清单**：每项有稳定 `candidate_id`；确认后形成 `approved_candidate_ids` 白名单，反例只留在「已排除 / 可能遗漏」。 |
+| [`sample-candidates.md`](sample-candidates.md) | Skill 成稿前给你复核的**候选清单**：每项有稳定 `candidate_id` 和可追溯的 `source_evidence_ids`；确认后形成 `approved_candidate_ids` 白名单，反例只留在「已排除 / 可能遗漏」。 |
 | [`sample-weekly-report.md`](sample-weekly-report.md) | 最终生成的**本地周报草稿**（只含正例）。 |
 
 ## 怎么用它跑一遍（用于演示 / 录屏）

@@ -159,7 +159,7 @@
       "action_type": "sent",
       "event_time": "2026-08-21T17:20:00+08:00",
       "ingested_at": "2026-08-23T20:04:00+08:00",
-      "summary": "给客户对接人发邮件，承诺周五交付台账导入初版，并附字段规范链接",
+      "summary": "给客户对接人发邮件，承诺下周五（2026-08-28）交付台账导入初版，并附字段规范链接",
       "project_hint": "客户台账系统",
       "evidence_level": "strong",
       "identity_verified": true
@@ -303,7 +303,7 @@
       "action_type": "summarized",
       "event_time": "2026-08-21T09:00:00+08:00",
       "ingested_at": "2026-08-23T20:07:00+08:00",
-      "summary": "（企微大圆总结·已按接触≠参与前置过滤）本周我在客户群主动推进台账联调排期，并向客户确认交付时间",
+      "summary": "（企微大圆总结·已按接触≠参与前置过滤）本周我在客户群主动推进台账联调排期，并向客户确认下周五（2026-08-28）交付",
       "project_hint": "客户台账系统",
       "evidence_level": "medium",
       "identity_verified": true
