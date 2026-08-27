@@ -98,16 +98,19 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 用用户时区，统一左闭右开 `[start, end)`：本周＝本周一 `00:00`→现在；上周＝上周一→本周一；用户给定日期以其为准。记 `event_time`（行为发生）与 `ingested_at`（采集）；是否属于本周只看 `event_time`。**不得让各连接器各自推算周界。**
 
 ### 2. 采集（只采 `verified` 源）
-每源用**当前用户身份**和同一窗口，拉完分页或记录停止原因；默认只读；任何权限失败 / 限流 / 分页截断 / 单源失败都置 `collection_complete=false`，最终周报开头明确写“数据不完整”并列缺口。**空结果 ≠ 读取失败**，别混为一谈。本地 CLI 采集命令见对应 reference；**执行前一律先看该 CLI 的 `--help`，不凭记忆猜命令**。用 WorkBuddy 连接器时以其工具返回结构为准。企业微信这一源不采原始数据，改由用户带入「大圆」的总结（见 `references/wecom-daiyuan.md`）。
+每源用**当前用户身份**和同一窗口，拉完分页或记录停止原因；默认只读。采集结果记在源 / 运行级 `collection_runs`，每次至少包含 `collection_run_id`、`platform`、`source_type`、`collection_complete`、`stop_reason`、`ingested_at`。任何权限失败 / 限流 / 分页截断 / 单源失败都置 `collection_complete=false`，并用 `stop_reason` 记录真实停止原因；最终周报开头明确写“数据不完整”并列缺口。**空结果 ≠ 读取失败**，别混为一谈。本地 CLI 采集命令见对应 reference；**执行前一律先看该 CLI 的 `--help`，不凭记忆猜命令**。用 WorkBuddy 连接器时以其工具返回结构为准。企业微信这一源不采原始数据，改由用户带入「大圆」的总结（见 `references/wecom-daiyuan.md`）。
 
 ### 3. 统一为个人证据（最小语义）
 ```json
-{"platform":"feishu|google|mail|wps|dingtalk|wecom|other","source_type":"im|mail|calendar|task|doc|meeting|summary",
- "source_id":"stable-id","actor_id":"current-user","action_type":"sent|replied|created|edited|commented|joined|spoke|completed",
- "event_time":"ISO-8601","summary":"...","project_hint":"...","evidence_level":"strong|medium|weak|pending",
- "identity_verified":true,"collection_complete":true}
+{"evidence_id":"ev_stable-id","collection_run_id":"run_stable-id",
+ "platform":"feishu|google|mail|wps|dingtalk|wecom|other","source_type":"im|mail|calendar|task|doc|meeting|summary",
+ "source_id":"stable-id","current_user_id":"u_me","actor_id":"u_actor","actor_is_current_user":false,
+ "user_relation":"actor|mentioned_party|share_recipient|invitee|assignee|group_member|summary_subject",
+ "action_type":"sent|replied|created|edited|commented|mentioned|shared|invited|assigned|spoke|completed|summarized",
+ "event_time":"ISO-8601","ingested_at":"ISO-8601","summary":"...","project_hint":"...",
+ "evidence_level":"strong|medium|weak|pending","identity_verified":true}
 ```
-按 `platform+source_type+source_id+action_type` 去重；跨源同一事项合并引用，不重复计成果。
+`actor_id` / `action_type` 记录“谁做了什么”，`current_user_id` / `user_relation` 记录“当前用户与这个事件的关系”。例如老板邀请当前用户开会，应记为 `actor_id=u_boss`、`action_type=invited`、`user_relation=invitee`，不得记为当前用户 `joined`。`collection_complete` 只属于 `collection_runs`，不放进单条证据。优先按 `evidence_id` 去重；跨源同一事项合并引用，不重复计成果。
 
 ### 4. 个人归因规则（本 Skill 的核心，先判“是不是本人主动”，再判“是不是产出”）
 
@@ -125,16 +128,16 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 不要用消息、会议、文档**条数**代替产出；优先识别交付、推进、决策、风险、承诺、下一步，用跨源互证提可信度。
 
 ### 5. 候选清单一次复核（生成前唯一必需交互）
-先给编号候选，不直接出终稿：
+先给候选，不直接出终稿。每项必须有稳定 `candidate_id`：由“时间窗起点 + 规范化事项键”生成，不随展示顺序、文案润色或合并前的证据顺序变化。修改候选保留原 ID；用户补充的新事项生成新 ID。
 ```
 本周候选工作（共 N 项）：
-1. [事项] 做了什么；结果/状态；来源：飞书消息 + WPS 文档
+1. [cand_YYYY-MM-DD_matter-key] [事项] 做了什么；结果/状态；来源：飞书消息 + WPS 文档
 可能遗漏：被 @ 未见后续；匿名发言待确认。
 来自企微大圆总结（请确认哪些真是你做的）：…
 数据缺口：邮件分页未完成。
-回复“确认”，或“删2、4”“补充……”“修改3……”。
+回复“确认”，或“删 cand_...”“补充……”“修改 cand_...……”。
 ```
-用户回复后一次性应用所有修改，再生成。**这一步只谈内容，不谈风格。**
+用户回复后一次性应用所有修改，形成明确白名单 `approved_candidate_ids`，再生成。“确认”只批准候选区的 ID，不批准“已排除 / 可能遗漏 / `pending` / 数据缺口”里的事项。用户明确补充或修改的事实，先规范化为候选并加入白名单。**这一步只谈内容，不谈风格。**
 
 ### 5.5 风格校准（可选 · 仅首次 · 拆成单独一拍，别和候选清单混在一起）
 候选清单**内容确认后、生成前**，若 config 里还没有 `style`，**单独问一句**（一次性；已学过就跳过，不再打扰）：
@@ -143,10 +146,11 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 ```
 - **鼓励上传、支持多份**（贴得越多学得越准，尤其项目名与术语）；回“默认”或不提供就用默认结构，不追问。
 - 从旧周报只抽**风格模式**（不存其内容）：小节名与顺序、口吻/人称/句长、粒度、是否带数据、**用户的用词与术语**（他写 “finish” 就别改“完成”、他叫“XX 系统”就沿用）、**项目排序**。
+- 风格校准只能改写法和排列，**不得新增事实、风险、待解决项或下周计划**，也不得把旧周报内容带入本周。
 - 把这份**风格档案**写入 config 的 `style` 字段（只存模式、非敏感），以后每次成稿套用；用户说“重新学我的周报风格”可重学。
 
 ### 6. 输出
-结构：**若 config 有 `style` 就照用户过往的来**（小节、口吻、用词、项目排序都按其过往）；没有才用默认——**本周进展 / 风险与待解决 / 下周计划 / 数据说明**。每项写**本人动作与结果**；无法判断结果写“推进至 / 等待 / 待验证”，不编造完成态。默认写到当前工作目录 `weekly-reports/YYYY-MM-DD_个人周报.md`。最终回复给出文件路径、覆盖来源、时间窗、不完整项。
+结构：**若 config 有 `style` 就照用户过往的来**（小节、口吻、用词、项目排序都按其过往）；没有才用默认——**本周进展 / 风险与待解决 / 下周计划 / 数据说明**。**本周进展、风险与待解决、下周计划里的每一条事实，都必须可回溯到 `approved_candidate_ids` 中的候选，或用户在复核时明确补充 / 修改的内容。**已排除、可能遗漏、`pending` 和数据缺口只能放在“数据说明 / 待确认提示”，不得自动转成风险、待解决或下周计划。每项写**本人动作与结果**；无法判断结果写“推进至 / 等待 / 待验证”，不编造完成态。默认写到当前工作目录 `weekly-reports/YYYY-MM-DD_个人周报.md`。最终回复给出文件路径、覆盖来源、时间窗、不完整项。
 
 ## 三、配置与安全
 

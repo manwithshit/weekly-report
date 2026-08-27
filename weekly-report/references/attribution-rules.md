@@ -17,5 +17,22 @@
 ## 只留这几类“证据”
 优先识别：**交付、推进、决策、风险处理、承诺、下一步**。不要用消息 / 会议 / 文档的**条数**代替产出。跨源同一事项互相印证以提高可信度。
 
+## 证据语义：动作人 ≠ 当前用户关系
+每条证据至少记录 `evidence_id`、`current_user_id`、`actor_id`、`actor_is_current_user`、`user_relation`、`action_type`、`event_time`、`ingested_at`。
+
+- `actor_id` + `action_type` 回答“谁做了什么”。
+- `current_user_id` + `user_relation` 回答“当前用户在这个事件里是什么关系”。
+- 老板邀请我开会：`actor_id=u_boss`、`action_type=invited`、`user_relation=invitee`，不是我 `joined`。
+- 老板给我分配任务：`actor_id=u_boss`、`action_type=assigned`、`user_relation=assignee`，只有后续发现我更新 / 完成 / 实质评论才生成我的新证据。
+- `collection_complete` 是整次来源采集的状态，只放在 `collection_runs`，并同时记录 `stop_reason`；不复制到每条证据。
+
+## 候选确认门禁
+每个候选使用不随展示顺序或文案润色变化的 `candidate_id`。用户复核后形成 `approved_candidate_ids` 白名单。
+
+- “确认”只批准候选区，不批准已排除、可能遗漏、`pending` 或数据缺口。
+- 本周进展、风险与待解决、下周计划的每条事实，只能来自白名单候选或用户复核时的明确补充 / 修改。
+- 已排除、可能遗漏、`pending` 只可放在数据说明 / 待确认提示，不得自动转成风险或计划。
+- 风格校准只改写法，不得新增事实或把旧周报内容带入本周。
+
 ## 用作 prompt 时（给不能跑代码的 AI）
 把上面「逐条规则」压成一句约束：**“只留我本人主动发起 / 推进 / 决策 / 承诺 / 交付的事；别人 @ 我没处理的、群里别人聊的、只是抄送 / 邀请 / 分配给我但没动的，都不要；拿不准就标待确认。”**
