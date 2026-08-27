@@ -23,6 +23,6 @@
 | 「全员通知群」团建讨论 | 群成员 ≠ 参与，群里他人消息不归你 → 排除 |
 
 **来自企微大圆总结（已总结源，请你确认哪些真是你做的）：**
-- `summary_pending_daiyuan_1` 客户群推进台账联调排期 ＋ 向客户确认交付时间 —— 中证据，与 `cand_2026-08-17_customer-ledger` 可能重叠；需显式确认后才能合并，不在普通「确认」的批准范围内。
+- `summary_pending_daiyuan_1` 客户群推进台账联调排期 ＋ 向客户确认交付时间 —— 中证据，与 `cand_2026-08-17_customer-ledger` 可能重叠；`identity_verified=true` 只表示总结动作人 `ai_daiyuan` 可确认，事项归因仍需显式确认，不在普通「确认」的批准范围内。若后续确认它只是补强现有事项，必须合并到 `cand_2026-08-17_customer-ledger` 并使该 ID 继续留在白名单；若形成新事项，则先生成新 `candidate_id` 再批准。
 
 > 本演示假设用户回复「确认」。形成白名单：`approved_candidate_ids = ["cand_2026-08-17_customer-ledger", "cand_2026-08-17_weekly-report-automation"]`。已排除 / 可能遗漏和 `summary_pending_daiyuan_1` 均不在白名单中。

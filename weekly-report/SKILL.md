@@ -106,11 +106,11 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
  "platform":"feishu|google|mail|wps|dingtalk|wecom|other","source_type":"im|mail|calendar|task|doc|meeting|summary",
  "source_id":"stable-id","current_user_id":"u_me","actor_id":"u_actor","actor_is_current_user":false,
  "user_relation":"actor|mentioned_party|share_recipient|invitee|assignee|group_member|summary_subject",
- "action_type":"sent|replied|created|edited|commented|mentioned|shared|invited|assigned|spoke|completed|summarized",
+ "action_type":"sent|replied|created|edited|commented|mentioned|shared|invited|assigned|attended|spoke|updated|completed|summarized",
  "event_time":"ISO-8601","ingested_at":"ISO-8601","summary":"...","project_hint":"...",
  "evidence_level":"strong|medium|weak|pending","identity_verified":true}
 ```
-`actor_id` / `action_type` 记录“谁做了什么”，`current_user_id` / `user_relation` 记录“当前用户与这个事件的关系”。例如老板邀请当前用户开会，应记为 `actor_id=u_boss`、`action_type=invited`、`user_relation=invitee`，不得记为当前用户 `joined`。`collection_complete` 只属于 `collection_runs`，不放进单条证据。优先按 `evidence_id` 去重；跨源同一事项合并引用，不重复计成果。
+`actor_id` / `action_type` 记录“谁做了什么”，`current_user_id` / `user_relation` 记录“当前用户与这个事件的关系”。例如老板邀请当前用户开会，应记为 `actor_id=u_boss`、`action_type=invited`、`user_relation=invitee`，不得记为当前用户 `joined`。`identity_verified` **只表示 `actor_id` 身份是否可确认**，不表示总结中的事项已证实属于当前用户；二手总结仍由 `source_type=summary`、`evidence_level=medium` 和候选单列显式确认来表达归因不确定性。`collection_complete` 只属于 `collection_runs`，不放进单条证据。优先按 `evidence_id` 去重；跨源同一事项合并引用，不重复计成果。
 
 ### 4. 个人归因规则（本 Skill 的核心，先判“是不是本人主动”，再判“是不是产出”）
 
@@ -120,10 +120,10 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 - 被 `@` ≠ 已处理 → 弱证据或“可能遗漏”。
 - 本人主动发送 / 回复进候选；表情、撤回、无业务语义短回复降级。
 - 文档被分享 / 打开 / 归我所有 ≠ 本周产出；**本人创建或实质编辑＝强，含内容评论＝中，仅改格式或被动打开＝降级**（WPS 用 `created_by` / `modified_by`、谷歌 Drive 用 `owners` / `lastModifyingUser` 区分）。
-- 日历邀请 ≠ 参会；真实参会 ≠ 贡献，只有本人发言 / 决策 / 方案 / 风险处理 / 承担行动项才升级。
-- 任务被分配 ≠ 本周进展；本人创建 / 更新 / 完成 / 实质评论才进候选。
+- 日历邀请 ≠ 参会；`attended` 只证明本人到场，本身不等于贡献，只有本人发言 / 决策 / 方案 / 风险处理 / 承担行动项才升级。
+- 任务被分配 ≠ 本周进展；本人创建 / 完成 / 实质评论可进候选；`updated` 只有在状态、内容、交付物或明确下一步上有实质更新才进候选，空更新 / 仅改元数据降级。
 - 匿名发言、身份不确定、权限缺失、分页失败一律 `pending`，禁止自动归因。
-- **已总结 / 二手源**（如企微「大圆」的总结）：原始信号已丢失，**不再细粒度归因**，统一标 `evidence_level=medium`、`source_type=summary`；进候选但在候选清单里**单列**，提示本人确认哪些真是自己做的。
+- **已总结 / 二手源**（如企微「大圆」的总结）：原始信号已丢失，**不再细粒度归因**，统一标 `evidence_level=medium`、`source_type=summary`；在候选清单里**单列**，提示本人确认哪些真是自己做的。显式确认后也不得直接成稿：若只是补强既有候选，合并来源并保留原 `candidate_id`；若是新事项，生成新 `candidate_id`；对应 ID 必须进入 `approved_candidate_ids`。
 
 不要用消息、会议、文档**条数**代替产出；优先识别交付、推进、决策、风险、承诺、下一步，用跨源互证提可信度。
 
@@ -137,7 +137,7 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 数据缺口：邮件分页未完成。
 回复“确认”，或“删 cand_...”“补充……”“修改 cand_...……”。
 ```
-用户回复后一次性应用所有修改，形成明确白名单 `approved_candidate_ids`，再生成。“确认”只批准候选区的 ID，不批准“已排除 / 可能遗漏 / `pending` / 数据缺口”里的事项。用户明确补充或修改的事实，先规范化为候选并加入白名单。**这一步只谈内容，不谈风格。**
+用户回复后一次性应用所有修改，形成明确白名单 `approved_candidate_ids`，再生成。“确认”只批准候选区的 ID，不批准“已排除 / 可能遗漏 / `pending` / 数据缺口”里的事项。用户补充的新事项必须先生成新 `candidate_id`；修改已有事项必须保留原 `candidate_id`。二者只有进入 `approved_candidate_ids` 后才能用于成稿，不存在“用户说过就直接写入终稿”的旁路。**这一步只谈内容，不谈风格。**
 
 ### 5.5 风格校准（可选 · 仅首次 · 拆成单独一拍，别和候选清单混在一起）
 候选清单**内容确认后、生成前**，若 config 里还没有 `style`，**单独问一句**（一次性；已学过就跳过，不再打扰）：
@@ -150,7 +150,7 @@ description: 把散在 IM、邮箱、文档、日历、待办、会议里的「�
 - 把这份**风格档案**写入 config 的 `style` 字段（只存模式、非敏感），以后每次成稿套用；用户说“重新学我的周报风格”可重学。
 
 ### 6. 输出
-结构：**若 config 有 `style` 就照用户过往的来**（小节、口吻、用词、项目排序都按其过往）；没有才用默认——**本周进展 / 风险与待解决 / 下周计划 / 数据说明**。**本周进展、风险与待解决、下周计划里的每一条事实，都必须可回溯到 `approved_candidate_ids` 中的候选，或用户在复核时明确补充 / 修改的内容。**已排除、可能遗漏、`pending` 和数据缺口只能放在“数据说明 / 待确认提示”，不得自动转成风险、待解决或下周计划。每项写**本人动作与结果**；无法判断结果写“推进至 / 等待 / 待验证”，不编造完成态。默认写到当前工作目录 `weekly-reports/YYYY-MM-DD_个人周报.md`。最终回复给出文件路径、覆盖来源、时间窗、不完整项。
+结构：**若 config 有 `style` 就照用户过往的来**（小节、口吻、用词、项目排序都按其过往）；没有才用默认——**本周进展 / 风险与待解决 / 下周计划 / 数据说明**。**本周进展 / 风险 / 待解决 / 下周计划这四类成稿内容的每一条事实，都必须可回溯到 `approved_candidate_ids` 中的候选，无例外。**已排除、可能遗漏、`pending` 和数据缺口只能放在“数据说明 / 待确认提示”，不得自动转成风险、待解决或下周计划。每项写**本人动作与结果**；无法判断结果写“推进至 / 等待 / 待验证”，不编造完成态。默认写到当前工作目录 `weekly-reports/YYYY-MM-DD_个人周报.md`。最终回复给出文件路径、覆盖来源、时间窗、不完整项。
 
 ## 三、配置与安全
 
