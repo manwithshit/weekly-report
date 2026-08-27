@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">weekly-report 从多源工作痕迹到确认后周报的流程</title>
+  <desc id="desc">IM、邮件、文档、日历、待办和会议先汇总为个人证据，经过归因、去重和合并形成候选清单；待确认信息单列，只有用户批准的候选才生成本地周报草稿。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#64748B"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="420" rx="24" fill="#0B1220"/>
+  <text x="50" y="66" fill="#F8FAFC" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="42" font-weight="700">多源汇总 → 候选确认 → 周报草稿</text>
+  <text x="50" y="104" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">找全散落的工作痕迹，合并同一事项；确认归因之后，才写入终稿。</text>
+  <g id="sources">
+    <rect x="50" y="142" width="230" height="218" rx="18" fill="#111C2F" stroke="#334155"/>
+    <text x="165" y="177" text-anchor="middle" fill="#38BDF8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="24" font-weight="700">六类来源</text>
+    <g fill="#16243B" stroke="#334155">
+      <rect x="68" y="196" width="94" height="46" rx="10"/>
+      <rect x="168" y="196" width="94" height="46" rx="10"/>
+      <rect x="68" y="250" width="94" height="46" rx="10"/>
+      <rect x="168" y="250" width="94" height="46" rx="10"/>
+      <rect x="68" y="304" width="94" height="38" rx="10"/>
+      <rect x="168" y="304" width="94" height="38" rx="10"/>
+    </g>
+    <g text-anchor="middle" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">
+      <text x="115" y="226">IM</text><text x="215" y="226">邮件</text>
+      <text x="115" y="280">文档</text><text x="215" y="280">日历</text>
+      <text x="115" y="330">待办</text><text x="215" y="330">会议</text>
+    </g>
+  </g>
+  <path d="M280 251 H314" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+  <g id="evidence">
+    <rect x="320" y="178" width="190" height="146" rx="18" fill="#10263B" stroke="#0EA5E9"/>
+    <text x="415" y="216" text-anchor="middle" fill="#7DD3FC" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="25" font-weight="700">个人证据</text>
+    <text x="415" y="256" text-anchor="middle" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">统一时间窗</text>
+    <text x="415" y="289" text-anchor="middle" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="20">归因 · 去重 · 合并</text>
+  </g>
+  <path d="M510 251 H544" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+  <g id="candidates">
+    <rect x="550" y="160" width="220" height="126" rx="18" fill="#171E31" stroke="#A78BFA"/>
+    <text x="660" y="196" text-anchor="middle" fill="#C4B5FD" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="25" font-weight="700">候选清单</text>
+    <rect x="570" y="210" width="180" height="28" rx="8" fill="#252B45"/>
+    <rect x="570" y="246" width="180" height="28" rx="8" fill="#252B45"/>
+    <g fill="#E2E8F0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="17">
+      <text x="584" y="230">cand_…ledger</text>
+      <text x="584" y="266">cand_…weekly</text>
+    </g>
+  </g>
+  <g id="pending-evidence">
+    <rect x="550" y="300" width="220" height="42" rx="12" fill="#332A1B" stroke="#F59E0B" stroke-dasharray="6 5"/>
+    <text x="660" y="327" text-anchor="middle" fill="#FBBF24" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">pending · 单列待确认</text>
+  </g>
+  <path d="M770 251 H799" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+  <g id="approval-gate">
+    <rect x="805" y="196" width="120" height="110" rx="18" fill="#13291F" stroke="#22C55E" stroke-width="2"/>
+    <circle cx="865" cy="228" r="13" fill="#22C55E"/>
+    <path d="M858 228 L863 233 L873 222" fill="none" stroke="#052E16" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="865" y="269" text-anchor="middle" fill="#86EFAC" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="24" font-weight="700">你确认</text>
+    <text x="865" y="293" text-anchor="middle" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18">内容门禁</text>
+  </g>
+  <path d="M925 251 H954" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+  <g id="report">
+    <rect x="960" y="178" width="190" height="146" rx="18" fill="#17233A" stroke="#60A5FA"/>
+    <text x="1055" y="216" text-anchor="middle" fill="#93C5FD" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="25" font-weight="700">周报草稿</text>
+    <line x1="986" y1="245" x2="1124" y2="245" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+    <line x1="986" y1="270" x2="1104" y2="270" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+    <line x1="986" y1="295" x2="1116" y2="295" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif" font-size="18" font-weight="600">
+    <text x="415" y="379" text-anchor="middle" fill="#38BDF8">多源汇总：找全</text>
+    <text x="660" y="379" text-anchor="middle" fill="#C4B5FD">候选归因：理清</text>
+    <text x="1055" y="379" text-anchor="middle" fill="#4ADE80">确认后生成：写准</text>
+  </g>
+</svg>
